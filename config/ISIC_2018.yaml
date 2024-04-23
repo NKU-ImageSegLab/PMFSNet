@@ -68,9 +68,10 @@ dice_mode: standard
 optimize_params: false
 run_dir: ./runs
 start_epoch: 0
-end_epoch: 150
+end_epoch: 250
 best_metric: 0
 terminal_show_freq: 20
 save_epoch_freq: 50
 
 result_path: ./results
+tensorboard_dir: null

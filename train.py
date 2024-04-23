@@ -25,6 +25,7 @@ def parse_args():
     parser.add_argument("--dimension", type=str, default=None, help="dimension of dataset images and models")
     parser.add_argument("--scaling_version", type=str, default="TINY", help="scaling version of PMFSNet")
     parser.add_argument("--epoch", type=int, default=None, help="training epoch")
+    parser.add_argument("--tensorboard_dir", type=str, default=None, help="tensorboard directory")
     args = parser.parse_args()
     return args
 
@@ -54,7 +55,7 @@ def main():
     if args.epoch is not None:
         params["end_epoch"] = args.epoch
         params["save_epoch_freq"] = args.epoch // 4
-
+    params["tensorboard_dir"] = args.tensorboard_dir if args.tensorboard_dir is not None else params["tensorboard_dir"]
     # launch initialization
     os.environ["CUDA_VISIBLE_DEVICES"] = f'{params["CUDA_VISIBLE_DEVICES"]}'
     os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:128"
