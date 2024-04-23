@@ -6,6 +6,7 @@
 @Version  :   1.0
 @License  :   (C)Copyright 2023
 """
+from .isic_tester import ISICTester
 from .tooth_tester import ToothTester
 from .mmotu_tester import MMOTUTester
 from .isic_2018_tester import ISIC2018Tester
@@ -16,8 +17,8 @@ def get_tester(opt, model, metrics=None):
         tester = ToothTester(opt, model, metrics)
     elif opt["dataset_name"] == "MMOTU":
         tester = MMOTUTester(opt, model, metrics)
-    elif opt["dataset_name"] == "ISIC-2018":
-        tester = ISIC2018Tester(opt, model, metrics)
+    elif "ISIC" in opt["dataset_name"]:
+        tester = ISICTester(opt, model, metrics)
     else:
         raise RuntimeError(f"No {opt['dataset_name']} dataset available when initialize tester")
 

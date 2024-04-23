@@ -10,11 +10,16 @@ import os
 import cv2
 import numpy as np
 from PIL import Image
+from torch import nn
 from tqdm import tqdm
 
 import torch
 
 from torchvision import transforms
+
+from lib import utils
+from lib.metrics import get_binary_metrics
+from lib.metrics.metrics import MetricsResult
 
 
 class ISIC2018Tester:
@@ -28,6 +33,12 @@ class ISIC2018Tester:
         self.metrics = metrics
         self.device = self.opt["device"]
 
+        self.execute_dir = os.path.join(opt["run_dir"],
+                                        opt["model_name"] + "_" + opt["dataset_name"])
+        if self.opt["sigmoid_normalization"]:
+            self.normalization = nn.Sigmoid()
+        else:
+            self.normalization = nn.Softmax(dim=1)
         self.statistics_dict = self.init_statistics_dict()
 
     def inference(self, image_path):
@@ -62,18 +73,21 @@ class ISIC2018Tester:
         self.model.eval()
 
         with torch.no_grad():
-            for input_tensor, target in tqdm(dataloader, leave=True):
+            metrics = get_binary_metrics()
+            for input_tensor, target, image_names in tqdm(dataloader, leave=True):
                 input_tensor, target = input_tensor.to(self.device), target.to(self.device)
                 output = self.model(input_tensor)
+                predict = self.normalization(output)
+                # # 将预测图像进行分割
+                predict = torch.argmax(predict, dim=1)
+                metrics.update(predict.float(), target.int())
                 self.calculate_metric_and_update_statistcs(output.cpu(), target.cpu(), len(target))
+            result = MetricsResult(metrics.compute())
 
-        class_IoU = self.statistics_dict["total_area_intersect"] / self.statistics_dict["total_area_union"]
-        class_IoU = np.nan_to_num(class_IoU)
-        dsc = self.statistics_dict["DSC_sum"] / self.statistics_dict["count"]
-        JI = self.statistics_dict["JI_sum"] / self.statistics_dict["count"]
-        ACC = self.statistics_dict["ACC_sum"] / self.statistics_dict["count"]
 
-        print("valid_DSC:{:.6f}  valid_IoU:{:.6f}  valid_ACC:{:.6f}  valid_JI:{:.6f}".format(dsc, class_IoU[1], ACC, JI))
+
+        print(
+            "valid_DSC:{:.6f}  valid_IoU:{:.6f}  valid_ACC:{:.6f}  valid_JI:{:.6f}".format(dsc, class_IoU[1], ACC, JI))
 
     def calculate_metric_and_update_statistcs(self, output, target, cur_batch_size):
         mask = torch.zeros(self.opt["classes"])
@@ -101,7 +115,8 @@ class ISIC2018Tester:
             else:
                 per_class_metric = metric_func(output, target)
                 per_class_metric = per_class_metric * mask
-                self.statistics_dict[metric_name]["avg"] += (torch.sum(per_class_metric) / torch.sum(mask)).item() * cur_batch_size
+                self.statistics_dict[metric_name]["avg"] += (torch.sum(per_class_metric) / torch.sum(
+                    mask)).item() * cur_batch_size
                 for j, class_name in self.opt["index_to_class_dict"].items():
                     self.statistics_dict[metric_name][class_name] += per_class_metric[j].item() * cur_batch_size
 
@@ -137,12 +152,15 @@ class ISIC2018Tester:
                 self.statistics_dict[metric_name][class_name] = 0.0
 
     def load(self):
-        pretrain_state_dict = torch.load(self.opt["pretrain"], map_location=lambda storage, loc: storage.cuda(self.device))
+        pretrain_state_dict = torch.load(self.opt["pretrain"],
+                                         map_location=lambda storage, loc: storage.cuda(self.device))
         model_state_dict = self.model.state_dict()
         load_count = 0
         for param_name in model_state_dict.keys():
-            if (param_name in pretrain_state_dict) and (model_state_dict[param_name].size() == pretrain_state_dict[param_name].size()):
+            if (param_name in pretrain_state_dict) and (
+                    model_state_dict[param_name].size() == pretrain_state_dict[param_name].size()):
                 model_state_dict[param_name].copy_(pretrain_state_dict[param_name])
                 load_count += 1
         self.model.load_state_dict(model_state_dict, strict=True)
-        print("{:.2f}% of model parameters successfully loaded with training weights".format(100 * load_count / len(model_state_dict)))
+        print("{:.2f}% of model parameters successfully loaded with training weights".format(
+            100 * load_count / len(model_state_dict)))

@@ -9,6 +9,7 @@
 from lib.metrics import Tooth
 from lib.metrics import MMOTU
 from lib.metrics import ISIC2018
+from .metrics import get_binary_metrics
 
 
 def get_metric(opt):
@@ -16,22 +17,32 @@ def get_metric(opt):
         metrics = []
         for metric_name in opt["metric_names"]:
             if metric_name == "DSC":
-                metrics.append(Tooth.DICE(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"], mode=opt["dice_mode"]))
+                metrics.append(
+                    Tooth.DICE(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"],
+                               mode=opt["dice_mode"]))
 
             elif metric_name == "ASSD":
-                metrics.append(Tooth.AverageSymmetricSurfaceDistance(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"]))
+                metrics.append(Tooth.AverageSymmetricSurfaceDistance(num_classes=opt["classes"],
+                                                                     sigmoid_normalization=opt[
+                                                                         "sigmoid_normalization"]))
 
             elif metric_name == "HD":
-                metrics.append(Tooth.HausdorffDistance(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"]))
+                metrics.append(Tooth.HausdorffDistance(num_classes=opt["classes"],
+                                                       sigmoid_normalization=opt["sigmoid_normalization"]))
 
             elif metric_name == "SO":
-                metrics.append(Tooth.SurfaceOverlappingValues(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"], theta=1.0))
+                metrics.append(Tooth.SurfaceOverlappingValues(num_classes=opt["classes"],
+                                                              sigmoid_normalization=opt["sigmoid_normalization"],
+                                                              theta=1.0))
 
             elif metric_name == "SD":
-                metrics.append(Tooth.SurfaceDice(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"], theta=1.0))
+                metrics.append(
+                    Tooth.SurfaceDice(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"],
+                                      theta=1.0))
 
             elif metric_name == "IoU":
-                metrics.append(Tooth.IoU(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"]))
+                metrics.append(
+                    Tooth.IoU(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"]))
 
             else:
                 raise RuntimeError(f"No {metric_name} metric available on {opt['dataset_name']} dataset")
@@ -40,28 +51,36 @@ def get_metric(opt):
         metrics = {}
         for metric_name in opt["metric_names"]:
             if metric_name == "DSC":
-                metrics[metric_name] = MMOTU.DICE(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"], mode=opt["dice_mode"])
+                metrics[metric_name] = MMOTU.DICE(num_classes=opt["classes"],
+                                                  sigmoid_normalization=opt["sigmoid_normalization"],
+                                                  mode=opt["dice_mode"])
 
             elif metric_name == "IoU":
-                metrics[metric_name] = MMOTU.IoU(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"])
+                metrics[metric_name] = MMOTU.IoU(num_classes=opt["classes"],
+                                                 sigmoid_normalization=opt["sigmoid_normalization"])
 
             else:
                 raise RuntimeError(f"No {metric_name} metric available on {opt['dataset_name']} dataset")
 
-    elif opt["dataset_name"] == "ISIC-2018":
+    elif "ISIC" in opt["dataset_name"]:
         metrics = {}
         for metric_name in opt["metric_names"]:
             if metric_name == "DSC":
-                metrics[metric_name] = ISIC2018.DICE(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"], mode=opt["dice_mode"])
+                metrics[metric_name] = ISIC2018.DICE(num_classes=opt["classes"],
+                                                     sigmoid_normalization=opt["sigmoid_normalization"],
+                                                     mode=opt["dice_mode"])
 
             elif metric_name == "IoU":
-                metrics[metric_name] = ISIC2018.IoU(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"])
+                metrics[metric_name] = ISIC2018.IoU(num_classes=opt["classes"],
+                                                    sigmoid_normalization=opt["sigmoid_normalization"])
 
             elif metric_name == "JI":
-                metrics[metric_name] = ISIC2018.JI(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"])
+                metrics[metric_name] = ISIC2018.JI(num_classes=opt["classes"],
+                                                   sigmoid_normalization=opt["sigmoid_normalization"])
 
             elif metric_name == "ACC":
-                metrics[metric_name] = ISIC2018.ACC(num_classes=opt["classes"], sigmoid_normalization=opt["sigmoid_normalization"])
+                metrics[metric_name] = ISIC2018.ACC(num_classes=opt["classes"],
+                                                    sigmoid_normalization=opt["sigmoid_normalization"])
 
             else:
                 raise RuntimeError(f"No {metric_name} metric available on {opt['dataset_name']} dataset")

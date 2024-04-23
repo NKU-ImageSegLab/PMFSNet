@@ -12,7 +12,6 @@ import torch.nn as nn
 import numpy as np
 
 import sys
-sys.path.append(r"D:\Projects\Python\3D-tooth-segmentation\PMFS-Net：Polarized Multi-scale Feature Self-attention Network For CBCT Tooth Segmentation\my-2d")
 from lib.utils import *
 
 

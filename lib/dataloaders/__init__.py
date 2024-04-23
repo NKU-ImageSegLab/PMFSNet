@@ -10,7 +10,7 @@ from torch.utils.data import DataLoader
 
 from .ToothDataset import ToothDataset
 from .MMOTUDataset import MMOTUDataset
-from .ISIC2018Dataset import ISIC2018Dataset
+from .ISICDataset import ISICDataset
 
 
 def get_dataloader(opt):
@@ -34,9 +34,9 @@ def get_dataloader(opt):
         train_loader = DataLoader(train_set, batch_size=opt["batch_size"], shuffle=True, num_workers=opt["num_workers"], pin_memory=True)
         valid_loader = DataLoader(valid_set, batch_size=opt["batch_size"], shuffle=False, num_workers=opt["num_workers"], pin_memory=True)
 
-    elif opt["dataset_name"] == "ISIC-2018":
-        train_set = ISIC2018Dataset(opt, mode="train")
-        valid_set = ISIC2018Dataset(opt, mode="valid")
+    elif "ISIC" in opt["dataset_name"]:
+        train_set = ISICDataset(opt, mode="train")
+        valid_set = ISICDataset(opt, mode="valid")
 
         train_loader = DataLoader(train_set, batch_size=opt["batch_size"], shuffle=True, num_workers=opt["num_workers"], pin_memory=True)
         valid_loader = DataLoader(valid_set, batch_size=opt["batch_size"], shuffle=False, num_workers=opt["num_workers"], pin_memory=True)
@@ -63,9 +63,9 @@ def get_test_dataloader(opt):
         valid_set = MMOTUDataset(opt, mode="valid")
         valid_loader = DataLoader(valid_set, batch_size=opt["batch_size"], shuffle=False, num_workers=1, pin_memory=True)
 
-    elif opt["dataset_name"] == "ISIC-2018":
-        valid_set = ISIC2018Dataset(opt, mode="valid")
-        valid_loader = DataLoader(valid_set, batch_size=opt["batch_size"], shuffle=False, num_workers=1, pin_memory=True)
+    elif "ISIC" in opt["dataset_name"]:
+        valid_set = ISICDataset(opt, mode="valid")
+        valid_loader = DataLoader(valid_set, batch_size=opt["batch_size"], shuffle=False, num_workers=8, pin_memory=True)
 
     else:
         raise RuntimeError(f"No {opt['dataset_name']} dataloader available")

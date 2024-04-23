@@ -1,0 +1,70 @@
+CUDA_VISIBLE_DEVICES: '0'
+T_0: 10
+T_max: 200
+T_mult: 5
+augmentation_p: 0.12097393901893663
+batch_size: 32
+benchmark: false
+best_metric: 0
+class_weight:
+- 0.2350689696563569
+- 0.7649310303436431
+classes: 2
+color_jitter: 0.4203933474361258
+cuda: true
+dataset_name: MMOTU
+dataset_path: ./datasets/MMOTU
+deterministic: true
+dice_loss_mode: extension
+dice_mode: standard
+end_epoch: 2000
+factor: 0.97
+gamma: 0.8689275449032848
+in_channels: 3
+index_to_class_dict:
+  0: background
+  1: foreground
+learning_rate: 0.01
+loss_function_name: DiceLoss
+lr_scheduler_name: CosineAnnealingLR
+metric_names:
+- DSC
+- IoU
+milestones:
+- 10
+- 30
+- 60
+- 100
+- 120
+- 140
+- 160
+- 170
+mode: max
+model_name: PMFSNet
+momentum: 0.7725414416309884
+normalize_means: !!python/tuple
+- 0.22250386
+- 0.21844882
+- 0.21521868
+normalize_stds: !!python/tuple
+- 0.21923075
+- 0.21622984
+- 0.21370508
+num_workers: 2
+optimize_params: false
+optimizer_name: AdamW
+patience: 1
+pretrain: null
+random_rotation_angle: 30
+resize_shape: !!python/tuple
+- 224
+- 224
+resume: null
+run_dir: ./runs
+save_epoch_freq: 500
+seed: 1777777
+sigmoid_normalization: false
+start_epoch: 0
+step_size: 5
+terminal_show_freq: 8
+weight_decay: 1.0e-05

@@ -114,7 +114,7 @@ class ISIC2018Trainer:
 
         self.model.train()
 
-        for batch_idx, (input_tensor, target) in enumerate(self.train_data_loader):
+        for batch_idx, (input_tensor, target, _) in enumerate(self.train_data_loader):
 
             input_tensor, target = input_tensor.to(self.device), target.to(self.device)
             output = self.model(input_tensor)
@@ -265,6 +265,8 @@ class ISIC2018Trainer:
         }
         if type == "normal":
             save_filename = "{:04d}_{}_{:.4f}.state".format(epoch, self.opt["model_name"], metric)
+        elif type == "best":
+            save_filename = 'best.state'
         else:
             save_filename = '{}_{}.state'.format(type, self.opt["model_name"])
         save_path = os.path.join(self.checkpoint_dir, save_filename)
