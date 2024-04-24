@@ -1,4 +1,4 @@
-CUDA_VISIBLE_DEVICES: 0
+CUDA_VISIBLE_DEVICES: '0'
 seed: 1777777
 cuda: True
 benchmark: False

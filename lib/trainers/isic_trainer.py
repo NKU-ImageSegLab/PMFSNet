@@ -54,12 +54,7 @@ class ISICTrainer:
         self.save_epoch_freq = opt["save_epoch_freq"]
 
     def training(self):
-        for epoch in tqdm(
-                iterable=range(self.start_epoch, self.end_epoch),
-                desc="Training",
-                unit="epoch",
-                total=self.end_epoch - self.start_epoch
-        ):
+        for epoch in range(self.start_epoch, self.end_epoch):
             self.optimizer.zero_grad()
 
             tr_result, tr_loss = self.train_epoch(epoch)
@@ -80,8 +75,8 @@ class ISICTrainer:
 
             print(
                 f'Epoch [{epoch + 1}'
-                f'/{self.end_epoch}], Loss: {tr_loss:.4f}, \n'
-                f'[Training] Acc: {vl_result.Accuracy:.4f}, '
+                f'/{self.end_epoch}], Loss: {vl_loss:.4f}, \n'
+                f'[Validation] Acc: {vl_result.Accuracy:.4f}, '
                 f'SE: {vl_result.Recall:.4f}, '
                 f'SP: {vl_result.Specificity:.4f}, '
                 f'PC: {vl_result.Precision:.4f}, '
@@ -151,11 +146,12 @@ class ISICTrainer:
         total_loss = 0
         for batch_idx, (input_tensor, target, _) in tqdm(
                 iterable=enumerate(self.train_data_loader),
-                desc="Current Image",
+                desc=f"{self.opt['dataset_name']} {self.opt['model_name']} Training [{epoch + 1}/{self.end_epoch}] Current Image",
                 unit="image",
                 total=len(self.train_data_loader)
         ):
-            input_tensor, target = input_tensor.to(self.device), target.to(self.device)
+            input_tensor = input_tensor.to(self.device)
+            target = target.to(self.device)
             output = self.model(input_tensor)
             predict = self.normalization(output)
             # # 将预测图像进行分割
@@ -177,11 +173,12 @@ class ISICTrainer:
             metrics = get_binary_metrics()
             for batch_idx, (input_tensor, target, _) in tqdm(
                     iterable=enumerate(self.valid_data_loader),
-                    desc="Current Image",
+                    desc=f"{self.opt['dataset_name']} {self.opt['model_name']} Validation [{epoch + 1}/{self.end_epoch}] Current Image",
                     unit="image",
                     total=len(self.valid_data_loader)
             ):
-                input_tensor, target = input_tensor.to(self.device), target.to(self.device)
+                input_tensor = input_tensor.to(self.device)
+                target = target.to(self.device)
                 output = self.model(input_tensor)
                 predict = self.normalization(output)
                 # # 将预测图像进行分割

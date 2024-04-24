@@ -36,9 +36,9 @@ class MetricsResult:
 
             wr.writerow([
                 model_name,
-                self.JaccardIndex, self.F1, self.Accuracy, self.Specificity,
-                self.Recall, self.Dice, self.AveragePrecision, self.AUROC,
-                self.Precision,
+                self.JaccardIndex * 100, self.F1 * 100, self.Accuracy * 100, self.Specificity * 100,
+                self.Recall * 100, self.Dice * 100, self.AveragePrecision * 100, self.AUROC * 100,
+                self.Precision * 100,
             ])
 
 

@@ -5,7 +5,7 @@ pip install ml_collections
 pip install monai
 pip install nibabel
 pip install nni
-pip install numpy
+pip install numpy==1.21.1
 pip install opencv_python
 pip install Pillow
 pip install pydensecrf
