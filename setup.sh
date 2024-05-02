@@ -5,7 +5,7 @@ pip install ml_collections
 pip install monai
 pip install nibabel
 pip install nni
-pip install numpy==1.21.1
+pip install numpy==1.22.4
 pip install opencv_python
 pip install Pillow
 pip install pydensecrf
@@ -22,3 +22,4 @@ pip install tqdm
 pip install torchmetrics
 pip install tensorboard
 pip install pyyaml
+pip install thop

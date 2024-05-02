@@ -105,9 +105,12 @@ class ISICTester:
 
 
             result = MetricsResult(metrics.compute())
+            params, flops = result.cal_params_flops(self.model, 256)
             result.to_result_csv(
                 os.path.join(self.result_path.__str__(), "result.csv"),
-                model_name=self.opt["model_name"]
+                model_name=self.opt["model_name"],
+                flops=flops,
+                params=params
             )
         print(
             f"valid_DSC:{result.Dice:.6f}  valid_IoU:{result.JaccardIndex:.6f}  valid_ACC:{result.Accuracy:.6f}  valid_JI:{result.JaccardIndex:.6f}")
