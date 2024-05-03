@@ -32,14 +32,14 @@ def get_dataloader(opt):
         valid_set = MMOTUDataset(opt, mode="valid")
 
         train_loader = DataLoader(train_set, batch_size=opt["batch_size"], shuffle=True, num_workers=opt["num_workers"], pin_memory=True)
-        valid_loader = DataLoader(valid_set, batch_size=opt["batch_size"], shuffle=False, num_workers=opt["num_workers"], pin_memory=True)
+        valid_loader = DataLoader(valid_set, batch_size=1, shuffle=False, num_workers=opt["num_workers"], pin_memory=True)
 
     elif "ISIC" in opt["dataset_name"]:
         train_set = ISICDataset(opt, mode="train")
         valid_set = ISICDataset(opt, mode="valid")
 
         train_loader = DataLoader(train_set, batch_size=opt["batch_size"], shuffle=True, num_workers=opt["num_workers"], pin_memory=True)
-        valid_loader = DataLoader(valid_set, batch_size=opt["batch_size"], shuffle=False, num_workers=opt["num_workers"], pin_memory=True)
+        valid_loader = DataLoader(valid_set, batch_size=1, shuffle=False, num_workers=opt["num_workers"], pin_memory=True)
 
     else:
         raise RuntimeError(f"No {opt['dataset_name']} dataloader available")
@@ -57,15 +57,15 @@ def get_test_dataloader(opt):
     """
     if opt["dataset_name"] == "3D-CBCT-Tooth":
         valid_set = ToothDataset(opt, mode="valid")
-        valid_loader = DataLoader(valid_set, batch_size=opt["batch_size"], shuffle=False, num_workers=1, pin_memory=True)
+        valid_loader = DataLoader(valid_set, batch_size=1, shuffle=False, num_workers=1, pin_memory=True)
 
     elif opt["dataset_name"] == "MMOTU":
         valid_set = MMOTUDataset(opt, mode="valid")
-        valid_loader = DataLoader(valid_set, batch_size=opt["batch_size"], shuffle=False, num_workers=1, pin_memory=True)
+        valid_loader = DataLoader(valid_set, batch_size=1, shuffle=False, num_workers=1, pin_memory=True)
 
     elif "ISIC" in opt["dataset_name"]:
         valid_set = ISICDataset(opt, mode="valid")
-        valid_loader = DataLoader(valid_set, batch_size=opt["batch_size"], shuffle=False, num_workers=8, pin_memory=True)
+        valid_loader = DataLoader(valid_set, batch_size=1, shuffle=False, num_workers=8, pin_memory=True)
 
     else:
         raise RuntimeError(f"No {opt['dataset_name']} dataloader available")
