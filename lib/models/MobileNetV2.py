@@ -113,7 +113,7 @@ class MobileNetV2(nn.Module):
         # make it nn.Sequential
         self.features = nn.Sequential(*self.features)
 
-        self.global_pmfs = GlobalPMFSBlock_AP(self.skip_channels, [16, 8, 4, 2, 1], 64, 64, 64, 5)
+        self.global_pmfs = GlobalPMFSBlock_AP_Separate(self.skip_channels, [16, 8, 4, 2, 1], 64, 64, 64, 5)
 
         self.upsample_1 = nn.Upsample(scale_factor=2, mode='bilinear')
         self.upsample_2 = nn.Upsample(scale_factor=4, mode='bilinear')

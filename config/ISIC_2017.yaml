@@ -4,8 +4,8 @@ cuda: True
 benchmark: False
 deterministic: True
 resize_shape:
-- 224
-- 224
+- 256
+- 256
 augmentation_p: 0.1
 color_jitter: 0.37
 random_rotation_angle: 15

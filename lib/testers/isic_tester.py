@@ -105,7 +105,10 @@ class ISICTester:
 
 
             result = MetricsResult(metrics.compute())
-            params, flops = result.cal_params_flops(self.model, 256)
+            try:
+                params, flops = result.cal_params_flops(self.model, 256)
+            except:
+                params, flops = 0, 0
             result.to_result_csv(
                 os.path.join(self.result_path.__str__(), "result.csv"),
                 model_name=self.opt["model_name"],

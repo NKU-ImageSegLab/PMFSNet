@@ -432,7 +432,12 @@ def get_model(opt):
 
         elif opt["model_name"] == "AttU_Net":
             model = AttU_Net(img_ch=opt["in_channels"], output_ch=opt["classes"])
-
+        elif opt["model_name"] == "TransUNet":
+            config_vit = CONFIGS_ViT_seg["R50-ViT-B_16"]
+            config_vit.n_classes = opt["classes"]
+            config_vit.n_skip = 3
+            config_vit.patches.grid = (int(opt["resize_shape"][0] / 16), int(opt["resize_shape"][1] / 16))
+            model = TransUNet(config_vit, img_size=opt["resize_shape"][0], num_classes=config_vit.n_classes)
         else:
             raise RuntimeError(f"No {opt['model_name']} model available on {opt['dataset_name']} dataset")
 
